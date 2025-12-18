@@ -1,59 +1,110 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📅 Event Organizer Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Систем за управување со **настани и организатори**, развиен како демонстрациски проект со примена на **Factory** и **Observer** дизајн-шарки.  
+Проектот овозможува креирање, уредување, преглед и бришење на организатори и настани, со валидација на податоците, пребарување и пагинација.
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Функционалности
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 👤 Организатори
+- Чување на податоци: `ID`, `име и презиме`, `email`, `телефонски број`.
+- Еден организатор може да има повеќе настани.
+- CRUD операции: додавање, уредување, преглед, бришење.
+- При преглед на еден организатор се прикажуваат сите негови настани.
+- Валидации:
+  - Име и презиме — задолжителни.
+  - Email — задолжителен и **уникатен**.
+  - Телефон — задолжителен.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🎫 Настани
+- Чување на податоци: `ID`, `име на настан`, `опис`, `тип`, `датум`, `организатор`.
+- CRUD операции за управување со настани.
+- Валидации:
+  - Име — задолжително.
+  - Опис — најмалку **20 карактери**.
+  - Тип и организатор — задолжителни.
+  - Датум — валиден и не смее да биде во минатото.
+- Пребарување (`search`) по име на настан.
+- Пагинација на Index страницата.
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 🧩 Дизајн Шарки
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 🏭 Factory Pattern
+Користен за **автоматско генерирање на податоци** (со сеедери):
 
-## Laravel Sponsors
+- `OrganizerFactory` — креира тест организатори (име, email, телефон).
+- `EventFactory` — креира тест настани (име, опис, тип, датум, организатор).
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Seeder-и ги пополнуваат базите со почетни податоци при иницијализација.
 
-### Premium Partners
+### 👀 Observer Pattern
+Имплементиран за автоматска обработка на настани при CRUD операции:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+#### OrganizerObserver
+- При додавање — се прикажува нотификација за нов организатор.  
+- При ажурирање/бришење — се запишува лог порака за промената.
 
-## Contributing
+#### EventObserver
+- При додавање — се генерира системска порака дека е додаден нов настан.  
+- При ажурирање — лог порака дека настанот е изменет.  
+- При бришење — се бележи дека настанот е **откажан**.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🗄️ CRUD Операции
 
-## Security Vulnerabilities
+| Ресурс | Опис |
+|--------|------|
+| `Index` | Преглед на сите записи (со пагинација) |
+| `Show` | Детален приказ на еден запис |
+| `Create` | Форма за креирање нов запис |
+| `Store` | Зачувување на запис во базата |
+| `Edit` | Форма за уредување постоечки запис |
+| `Update` | Ажурирање на постоечки запис |
+| `Destroy` | Бришење на запис |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🔎 Пребарување и Пагинација
+- Пребарување на настани по име преку едноставен `input` филтер.
+- Пагинација е имплементирана за подобра организација на листите.
+
+
+
+## 🧱 Технологии
+- **Backend:** Laravel (или друг фрејмворк кој си го користел)
+- **Database:** MySQL / PostgreSQL
+- **Frontend:** Blade / React / Vue (во зависност од имплементацијата)
+- **Design Patterns:** Factory, Observer
+- **Tools:** Seeder-и, Eloquent Models, Validation Rules
+
+
+## ⚙️ Инсталација и Подесување
+
+1. Клонирај го репозиториумот:
+   ```
+   git clone https://github.com/<твој-username>/<име-на-проект>.git
+   ```
+2. Влези во директориумот:
+   ```
+   cd <име-на-проект>
+   ```
+3. Инсталирај ги зависностите:
+   ```
+   composer install
+   ```
+4. Конфигурирај `.env` фајл (database име, корисник, лозинка).
+5. Изврши миграции и сеедери:
+   ```
+   php artisan migrate --seed
+   ```
+6. Стартувај ја апликацијата:
+   ```
+   php artisan serve
+   ```
+
+Потоа отвори [http://localhost:8000](http://localhost:8000) во прелистувач.
+
+## 📝 Лиценца
+Овој проект е објавен под **MIT License**. Слободно користи, менувај и проширувај го кодот.
